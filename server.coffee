@@ -58,6 +58,7 @@ app.get '/mytriggers', triggerController.getMyTriggers
 app.get '/my-triggers', triggerController.getMyTriggers
 
 app.post '/flows/:flowId/triggers/:triggerId', triggerController.trigger
+app.post '/requests/:requestId', triggerController.respond
 
 app.get '/flows/:flowId/triggers/:triggerId', (request, response) ->
   response.status(405).send('Method Not Allowed: POST required')

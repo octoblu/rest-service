@@ -1,11 +1,23 @@
 Meshblu      = require 'meshblu-http'
 TriggerModel = require './trigger-model'
 _            = require 'lodash'
+uuid         = require 'uuid'
 debug        = require('debug')('triggers-service:trigger-controller')
 
 class TriggerController
   constructor: (@meshbluOptions={}) ->
     @triggerModel = new TriggerModel()
+    @pending = {}
+
+  respond: (request, response) =>
+    console.log 'looking for:', request.params.requestId
+    pending = @pending[request.params.requestId]
+    return response.status(404).send() unless pending?
+
+    console.log pending, pending?
+    delete @pending[request.params.requestId]
+    pending.response.status(200).send(request.body)
+    response.status(200).send()
 
   trigger: (request, response) =>
     {flowId, triggerId} = request.params
@@ -22,13 +34,15 @@ class TriggerController
       payload:
         from: triggerId
         params: request.body
+        requestId: uuid.v1()
 
     debug 'sending message', message
 
+    console.log 'setting:', message.payload.requestId
+    @pending[message.payload.requestId] = request: request, response: response
     meshblu.message message, (error, body) =>
       return response.status(401).json(error: 'unauthorized') if error?.message == 'unauthorized'
       return response.status(500).end() if error?
-      return response.status(201).json(body)
 
   getTriggers: (request, response) =>
     meshbluConfig = _.extend request.meshbluAuth, @meshbluOptions
