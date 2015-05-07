@@ -5,7 +5,7 @@ labels:
   name: rest-service-blue
   version: "$SHORT_COMMIT"
 desiredState:
-  replicas: 2
+  replicas: 1
   replicaSelector:
     name: rest-service-blue
     version: "$SHORT_COMMIT"
@@ -23,4 +23,3 @@ desiredState:
             image: octoblu/rest-service:$SHORT_COMMIT
             ports:
               - containerPort: 80
-
