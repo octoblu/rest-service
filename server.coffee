@@ -9,9 +9,9 @@ bodyParser = require 'body-parser'
 MESHBLU_HOST          = process.env.MESHBLU_HOST || 'meshblu.octoblu.com'
 MESHBLU_PORT          = process.env.MESHBLU_PORT || '443'
 MESHBLU_PROTOCOL      = process.env.MESHBLU_PROTOCOL || 'https'
-TRIGGER_SERVICE_PORT  = process.env.TRIGGER_SERVICE_PORT || 80
-TRIGGER_SERVICE_UUID  = process.env.TRIGGER_SERVICE_UUID
-TRIGGER_SERVICE_TOKEN = process.env.TRIGGER_SERVICE_TOKEN
+REST_SERVICE_PORT  = process.env.REST_SERVICE_PORT || 80
+REST_SERVICE_UUID  = process.env.REST_SERVICE_UUID
+REST_SERVICE_TOKEN = process.env.REST_SERVICE_TOKEN
 
 triggerController = new TriggerController
   server: MESHBLU_HOST
@@ -39,8 +39,8 @@ app.use '/flows/:flowId/triggers/:triggerId', (request, response, next) ->
   meshbluAuthExpress.getFromAnywhere request
 
   defaultAuth =
-    uuid: TRIGGER_SERVICE_UUID
-    token: TRIGGER_SERVICE_TOKEN
+    uuid: REST_SERVICE_UUID
+    token: REST_SERVICE_TOKEN
 
   {uuid, token} = request.meshbluAuth ? defaultAuth
   return response.status(401).end() unless uuid? && token?
@@ -63,7 +63,7 @@ app.post '/requests/:requestId', triggerController.respond
 app.get '/flows/:flowId/triggers/:triggerId', (request, response) ->
   response.status(405).send('Method Not Allowed: POST required')
 
-server = app.listen TRIGGER_SERVICE_PORT, ->
+server = app.listen REST_SERVICE_PORT, ->
   host = server.address().address
   port = server.address().port
 
