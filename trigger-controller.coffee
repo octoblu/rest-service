@@ -23,8 +23,8 @@ class TriggerController
     {flowId, triggerId} = request.params
 
     defaultAuth =
-      uuid: process.env.TRIGGER_SERVICE_UUID
-      token: process.env.TRIGGER_SERVICE_TOKEN
+      uuid: process.env.REST_SERVICE_UUID
+      token: process.env.REST_SERVICE_TOKEN
 
     meshbluConfig = _.extend {}, defaultAuth, request.meshbluAuth, @meshbluOptions
     meshblu = new Meshblu meshbluConfig
