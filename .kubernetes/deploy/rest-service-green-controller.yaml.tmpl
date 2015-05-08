@@ -23,3 +23,8 @@ desiredState:
             image: octoblu/rest-service:$SHORT_COMMIT
             ports:
               - containerPort: 80
+            env:
+              - name: REST_SERVICE_UUID
+                value: $REST_SERVICE_UUID
+              - name: REST_SERVICE_TOKEN
+                value: $REST_SERVICE_TOKEN
