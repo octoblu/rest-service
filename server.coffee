@@ -9,9 +9,9 @@ bodyParser = require 'body-parser'
 MESHBLU_HOST          = process.env.MESHBLU_HOST || 'meshblu.octoblu.com'
 MESHBLU_PORT          = process.env.MESHBLU_PORT || '443'
 MESHBLU_PROTOCOL      = process.env.MESHBLU_PROTOCOL || 'https'
-REST_SERVICE_PORT  = process.env.REST_SERVICE_PORT || 80
-REST_SERVICE_UUID  = process.env.REST_SERVICE_UUID
-REST_SERVICE_TOKEN = process.env.REST_SERVICE_TOKEN
+REST_SERVICE_PORT     = process.env.PORT || process.env.REST_SERVICE_PORT || 80
+REST_SERVICE_UUID     = process.env.REST_SERVICE_UUID
+REST_SERVICE_TOKEN    = process.env.REST_SERVICE_TOKEN
 
 triggerController = new TriggerController
   server: MESHBLU_HOST

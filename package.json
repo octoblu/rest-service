@@ -1,11 +1,11 @@
 {
   "name": "triggers-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "server.js",
   "repository": {
-   "type": "git",
-   "url": "https://github.com/octoblu/rest-service.git"
+    "type": "git",
+    "url": "https://github.com/octoblu/rest-service.git"
   },
   "scripts": {
     "test": "exit 0"
