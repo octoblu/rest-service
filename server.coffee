@@ -29,11 +29,6 @@ meshbluOptions =
   port: MESHBLU_PORT
   protocol: MESHBLU_PROTOCOL
 
-app.use '/all-triggers', meshbluAuth meshbluOptions
-app.use '/triggers', meshbluAuth meshbluOptions
-app.use '/mytriggers', meshbluAuth meshbluOptions
-app.use '/my-triggers', meshbluAuth meshbluOptions
-
 app.use '/flows/:flowId/triggers/:triggerId', (request, response, next) ->
   meshbluAuthExpress = new MeshbluAuthExpress meshbluOptions
   meshbluAuthExpress.getFromAnywhere request
@@ -51,11 +46,6 @@ app.use '/flows/:flowId/triggers/:triggerId', (request, response, next) ->
     next()
 
 app.options '*', cors()
-
-app.get '/all-triggers', triggerController.getTriggers
-app.get '/triggers', triggerController.getMyTriggers
-app.get '/mytriggers', triggerController.getMyTriggers
-app.get '/my-triggers', triggerController.getMyTriggers
 
 app.post '/flows/:flowId/triggers/:triggerId', triggerController.trigger
 app.post '/requests/:requestId', triggerController.respond

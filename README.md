@@ -1,5 +1,5 @@
-# Octoblu Trigger Service
-Service to list and activate Octoblu triggers
+# Octoblu Rest Service
+Service to list and activate Octoblu triggers and wait for a response.
 
 ## Supported Auth Methods
 
@@ -8,17 +8,8 @@ Service to list and activate Octoblu triggers
 * basic: `Authorization: Basic c3VwZXItcGluazpwaW5raXNoLXB1cnBsZWlzaAo=`
 * bearer: `Authorization: Bearer c3VwZXItcGluazpwaW5raXNoLXB1cnBsZWlzaAo=`
 
-## Get Triggers Example:
-    curl https://username:password@triggers.octoblu.com/triggers
-
-    =>
-    [{
-      "id" : "396f2cf4-b352-4e38-b2f4-3f64ef854de8",
-      "name" : "trigger",
-      "flowId" : "5b76ec5d-fea2-4160-97c2-cf10fe847158",
-      "flowName" : "sample",
-      "uri": "https://triggers.octoblu.com/flows/5b76ec5d-fea2-4160-97c2-cf10fe847158/triggers/396f2cf4-b352-4e38-b2f4-3f64ef854de8"
-    }]
-
 ## Activate Trigger Example:
-    curl -X POST https://triggers.octoblu.com/flows/:flowId/triggers/:id -H 'meshblu_auth_uuid: uuid' -H 'meshblu_auth_token: token'
+
+```
+curl -X POST https://rest.octoblu.com/flows/:flowId/triggers/:id -H 'meshblu_auth_uuid: uuid' -H 'meshblu_auth_token: token'
+```
