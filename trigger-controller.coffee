@@ -20,6 +20,7 @@ class TriggerController
 
     debug pending, pending?
     delete @pending[request.params.requestId]
+    debug 'responding to ', request.params.requestId 
     pending.response.status(200).send(request.body)
     response.status(200).send()
 
@@ -36,7 +37,7 @@ class TriggerController
       hostname: @HOSTNAME
       port: @PORT
       protocol: @PROTOCOL
-      path: "/requests/#{requestId}"
+      pathname: "/requests/#{requestId}"
 
     callbackUrl = url.format urlOptions
 
@@ -53,10 +54,11 @@ class TriggerController
 
     debug 'sending message', message
 
-    debug 'setting:', message.payload.requestId
-    @pending[message.payload.requestId] = request: request, response: response
+    debug 'setting:', requestId
+    @pending[requestId] = request: request, response: response
     meshblu.message message, (error, body) =>
       return response.status(401).json error: 'unauthorized' if error?.message == 'unauthorized'
       return response.status(500).end() if error?
+      debug 'leaving open'
 
 module.exports = TriggerController

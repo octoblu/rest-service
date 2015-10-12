@@ -13,3 +13,9 @@ Service to list and activate Octoblu triggers and wait for a response.
 ```
 curl -X POST https://rest.octoblu.com/flows/:flowId/triggers/:id -H 'meshblu_auth_uuid: uuid' -H 'meshblu_auth_token: token'
 ```
+
+## Respond tp Trigger Example:
+
+```
+curl -X POST https://rest.octoblu.com/requests/:requestId
+```
