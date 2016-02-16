@@ -7,7 +7,7 @@ class RestController
     {responseId} = request.query
     {triggerName} = request.params
     @restService.triggerByName {meshbluAuth,triggerName,responseId}, body, (error, result) =>
-      return response.status(error.code || 500).send error: error if error?
+      return response.status(error.code || 500).send error: error.message if error?
       response.status(result.code).send result.data
 
   triggerById: (request, response) =>
@@ -15,7 +15,7 @@ class RestController
     {flowId, triggerId} = request.params
     {responseId} = request.query
     @restService.triggerByName {meshbluAuth,flowId,triggerId,responseId}, body, (error, result) =>
-      return response.status(error.code || 500).send error: error if error?
+      return response.status(error.code || 500).send error: error.message if error?
       response.status(result.code).send result.data
 
   respond: (request, response) =>
@@ -23,7 +23,7 @@ class RestController
     {responseId} = request.params
     {code} = request.query
     @restService.respond {responseId,code}, body, (error, result) =>
-      return response.status(error.code || 500).send error: error if error?
+      return response.status(error.code || 500).send error: error.message if error?
       response.status(result.code).send result.data
 
 module.exports = RestController
