@@ -4,8 +4,7 @@ class RestController
 
   triggerByName: (request, response) =>
     {meshbluAuth, body} = request
-    {triggerName} = request.params
-    {responseId} = request.query
+    {responseId,triggerName} = request.query
     @restService.triggerByName {meshbluAuth,triggerName,responseId}, body, (error, result) =>
       return response.status(error.code || 500).send error: error if error?
       response.status(result.code).send result.data
