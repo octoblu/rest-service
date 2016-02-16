@@ -4,7 +4,7 @@ NodeUUID     = require 'uuid'
 class RestService
   constructor: ({@jobManager}) ->
 
-  triggerByName: ({meshbluAuth,triggerName,responseId}, data, callback) =>
+  triggerByName: ({meshbluAuth,triggerName,responseId,responseBaseUri}, data, callback) =>
     responseId ?= NodeUUID.v4()
     message =
       metadata:
@@ -12,6 +12,7 @@ class RestService
         jobType: 'triggerByName'
         responseId: responseId
         triggerName: triggerName
+        responseBaseUri: responseBaseUri
       data: data
 
     @jobManager.do 'request', 'response', message, (error, result) =>
@@ -19,7 +20,7 @@ class RestService
       return callback @_createError 408, 'Request Timeout' unless result?
       callback null, code: result.metadata?.code, data: JSON.parse result.rawData
 
-  triggerById: ({meshbluAuth,flowId,triggerId,responseId}, data, callback) =>
+  triggerById: ({meshbluAuth,flowId,triggerId,responseId,responseBaseUri}, data, callback) =>
     responseId ?= NodeUUID.v4()
     message =
       metadata:
@@ -28,6 +29,7 @@ class RestService
         responseId: responseId
         triggerId: triggerId
         flowId: flowId
+        responseBaseUri: responseBaseUri
       data: data
 
     @jobManager.do 'request', 'response', message, (error, result) =>

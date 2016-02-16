@@ -6,7 +6,8 @@ class RestController
     {meshbluAuth, body} = request
     {responseId} = request.query
     {triggerName} = request.params
-    @restService.triggerByName {meshbluAuth,triggerName,responseId}, body, (error, result) =>
+    responseBaseUri = request.header('X-RESPONSE-BASE-URI') ? 'https://rest.octoblu.com'
+    @restService.triggerByName {meshbluAuth,triggerName,responseId,responseBaseUri}, body, (error, result) =>
       return response.status(error.code || 500).send error: error.message if error?
       response.status(result.code).send result.data
 
@@ -14,7 +15,8 @@ class RestController
     {meshbluAuth, body} = request
     {flowId, triggerId} = request.params
     {responseId} = request.query
-    @restService.triggerById {meshbluAuth,flowId,triggerId,responseId}, body, (error, result) =>
+    responseBaseUri = request.header('X-RESPONSE-BASE-URI') ? 'https://rest.octoblu.com'
+    @restService.triggerById {meshbluAuth,flowId,triggerId,responseId,responseBaseUri}, body, (error, result) =>
       return response.status(error.code || 500).send error: error.message if error?
       response.status(result.code).send result.data
 
