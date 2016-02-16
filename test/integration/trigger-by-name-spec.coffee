@@ -57,7 +57,7 @@ describe 'Trigger By Name', ->
       jobManager.createResponse 'response', responseOptions, ->
 
       options =
-        uri: '/flows/triggers'
+        uri: '/flows/triggers/my-trigger-name'
         baseUrl: "http://localhost:#{@serverPort}"
         auth:
           user: 'my-uuid'
@@ -66,7 +66,6 @@ describe 'Trigger By Name', ->
           name: 'Freedom'
         qs:
           responseId: 'response-id'
-          triggerName: 'my-trigger-name'
 
       request.post options, (error, @response, @body) =>
         done error
