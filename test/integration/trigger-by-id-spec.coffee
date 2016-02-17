@@ -1,7 +1,8 @@
+_          = require 'lodash'
 request    = require 'request'
 shmock     = require '@octoblu/shmock'
 Server     = require '../../src/server'
-redis      = require 'fakeredis'
+redis      = require 'redis'
 RedisNS    = require '@octoblu/redis-ns'
 JobManager = require 'meshblu-core-job-manager'
 uuid       = require 'uuid'
@@ -10,19 +11,20 @@ describe 'Trigger By Id', ->
   beforeEach (done) ->
     @meshblu = shmock 0xd00d
 
-    serverOptions =
-      port: undefined,
-      disableLogging: true
-
     meshbluConfig =
       server: 'localhost'
       port: 0xd00d
 
-    @redisKey = uuid.v1()
-    client = new RedisNS 'rest-test', redis.createClient @redisKey
+    serverOptions =
+      port: undefined,
+      disableLogging: true
+      meshbluConfig: meshbluConfig
+      jobTimeoutSeconds: 1
+      namespace:   'rest:test'
+      jobLogQueue: 'rest:job-log'
+      jobLogRedisUri: 'redis://localhost:6379'
 
-    jobManager = new JobManager client: client, timeoutSeconds: 1
-    @server = new Server serverOptions, {meshbluConfig, jobManager}
+    @server = new Server serverOptions
 
     @server.run =>
       @serverPort = @server.address().port
@@ -34,12 +36,12 @@ describe 'Trigger By Id', ->
   afterEach (done) ->
     @meshblu.close done
 
+  beforeEach ->
+    @redis = _.bindAll new RedisNS 'rest:test', redis.createClient()
+    @jobManager = new JobManager client: @redis, timeoutSeconds: 1
+
   describe 'POST /flows/:flowId/triggers/:triggerId', ->
     beforeEach (done) ->
-      client = new RedisNS 'rest-test', redis.createClient @redisKey
-
-      jobManager = new JobManager client: client, timeoutSeconds: 1
-
       auth = new Buffer('my-uuid:my-token').toString('base64')
 
       @meshbluAuth = @meshblu
@@ -54,7 +56,7 @@ describe 'Trigger By Id', ->
         data:
           name: 'Freedom'
 
-      jobManager.createResponse 'response', responseOptions, ->
+      @jobManager.createResponse 'response', responseOptions, ->
 
       options =
         uri: '/flows/flow-id/triggers/trigger-id'

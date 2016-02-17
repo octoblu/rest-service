@@ -1,30 +1,26 @@
 _             = require 'lodash'
 MeshbluConfig = require 'meshblu-config'
-JobManager    = require 'meshblu-core-job-manager'
-redis         = require 'redis'
-RedisNS       = require '@octoblu/redis-ns'
 Server        = require './src/server'
 
 class Command
   constructor: ->
     @serverOptions =
-      port                 : process.env.PORT || 80
-      disableLogging       : process.env.DISABLE_LOGGING == "true"
-
-    @redisUri = process.env.REDIS_URI || 'redis://127.0.0.1:6379'
-    @namespace = process.env.NAMESPACE || 'rest'
-    @timeoutSeconds = parseInt process.env.TIMEOUT_SECONDS || 15
+      port:                         process.env.PORT || 80
+      redisUri:                     process.env.REDIS_URI
+      namespace:                    process.env.NAMESPACE || 'rest'
+      jobTimeoutSeconds:            process.env.JOB_TIMEOUT_SECONDS || 30
+      connectionPoolMaxConnections: process.env.CONNECTION_POOL_MAX_CONNECTIONS || 100
+      disableLogging:               process.env.DISABLE_LOGGING == "true"
+      jobLogRedisUri:               process.env.JOB_LOG_REDIS_URI
+      jobLogQueue:                  process.env.JOB_LOG_QUEUE
+      meshbluConfig:                new MeshbluConfig().toJSON()
 
   panic: (error) =>
     console.error error.stack
     process.exit 1
 
   run: =>
-    meshbluConfig = new MeshbluConfig().toJSON()
-    client = new RedisNS @namespace, redis.createClient @redisUri
-
-    jobManager = new JobManager client: client, timeoutSeconds: @timeoutSeconds
-    server = new Server @serverOptions, {meshbluConfig,jobManager}
+    server = new Server @serverOptions
 
     server.run (error) =>
       return @panic error if error?
