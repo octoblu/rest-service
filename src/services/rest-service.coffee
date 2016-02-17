@@ -1,5 +1,6 @@
-_            = require 'lodash'
-NodeUUID     = require 'uuid'
+_               = require 'lodash'
+NodeUUID        = require 'uuid'
+debug           = require('debug')('rest-service:service')
 
 class RestService
   constructor: ({@jobManager}) ->
@@ -43,10 +44,8 @@ class RestService
     message =
       metadata: {code, responseId}
       data: data
-
-    @jobManager.createResponse 'response', message, (error) =>
-      return callback @_createError 500, error.message if error?
-      callback null, code: 200, data: success: true
+    @jobManager.createResponse 'response', message, ->
+    callback null, code: 200, data: success: true
 
   _createError: (code, message) =>
     error = new Error message

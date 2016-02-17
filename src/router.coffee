@@ -6,10 +6,8 @@ class Router
 
   route: (app) =>
     restController = new RestController {@restService}
-    app.use '/flows', meshbluAuth(@meshbluConfig)
-
-    app.post '/flows/:flowId/triggers/:triggerId', restController.triggerById
-    app.post '/flows/triggers/:triggerName', restController.triggerByName
+    app.post '/flows/:flowId/triggers/:triggerId', meshbluAuth(@meshbluConfig), restController.triggerById
+    app.post '/flows/triggers/:triggerName', meshbluAuth(@meshbluConfig), restController.triggerByName
     app.post '/respond/:responseId', restController.respond
 
     app.get '/flows/:flowId/triggers/:triggerId', (request, response) ->
