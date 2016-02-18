@@ -30,7 +30,7 @@ class Command
 
       process.on 'SIGTERM', =>
         console.log 'SIGTERM caught, exiting'
-        @server.stop =>
+        server.stop =>
           process.exit 0
 
 command = new Command()
