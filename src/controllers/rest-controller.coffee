@@ -4,8 +4,8 @@ class RestController
 
   triggerByName: (request, response) =>
     {meshbluAuth, body} = request
-    {responseId} = request.query
-    {triggerName,type} = request.params
+    {responseId,type} = request.query
+    {triggerName} = request.params
     responseBaseUri = request.header('X-RESPONSE-BASE-URI') ? 'https://rest.octoblu.com'
     @restService.triggerByName {meshbluAuth,triggerName,responseId,responseBaseUri,type}, body, (error, result) =>
       return response.status(error.code || 500).send error: error.message if error?
