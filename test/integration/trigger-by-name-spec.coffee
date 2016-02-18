@@ -70,6 +70,7 @@ describe 'Trigger By Name', ->
           name: 'Freedom'
         qs:
           responseId: 'response-id'
+          type: 'hello'
 
       request.post options, (error, @response, @body) =>
         done error
