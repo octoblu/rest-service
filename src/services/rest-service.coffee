@@ -5,7 +5,7 @@ debug           = require('debug')('rest-service:service')
 class RestService
   constructor: ({@jobManager}) ->
 
-  triggerByName: ({meshbluAuth,triggerName,responseId,responseBaseUri}, data, callback) =>
+  triggerByName: ({meshbluAuth,triggerName,responseId,responseBaseUri,type}, data, callback) =>
     responseId ?= NodeUUID.v4()
     message =
       metadata:
@@ -14,6 +14,7 @@ class RestService
         responseId: responseId
         triggerName: triggerName
         responseBaseUri: responseBaseUri
+        type: type
       data: data
 
     @jobManager.do 'request', 'response', message, (error, result) =>
@@ -21,7 +22,7 @@ class RestService
       return callback @_createError 408, 'Request Timeout' unless result?
       callback null, code: result.metadata?.code, data: JSON.parse result.rawData
 
-  triggerById: ({meshbluAuth,flowId,triggerId,responseId,responseBaseUri}, data, callback) =>
+  triggerById: ({meshbluAuth,flowId,triggerId,responseId,responseBaseUri,type}, data, callback) =>
     responseId ?= NodeUUID.v4()
     message =
       metadata:
@@ -31,6 +32,7 @@ class RestService
         triggerId: triggerId
         flowId: flowId
         responseBaseUri: responseBaseUri
+        type: type
       data: data
 
     @jobManager.do 'request', 'response', message, (error, result) =>
