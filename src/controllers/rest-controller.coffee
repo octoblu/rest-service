@@ -13,6 +13,7 @@ class RestController
 
   triggerById: (request, response) =>
     {meshbluAuth, body} = request
+    # meshbluAuth(@meshbluConfig)
     {flowId, triggerId} = request.params
     {responseId} = request.query
     responseBaseUri = request.header('X-RESPONSE-BASE-URI') ? 'https://rest.octoblu.com'

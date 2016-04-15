@@ -1,14 +1,16 @@
 RestController = require './controllers/rest-controller'
-meshbluAuth    = require 'express-meshblu-auth'
+MeshbluAuth    = require 'express-meshblu-auth'
 
 class Router
-  constructor: ({@restService,@meshbluConfig}) ->
+  constructor: ({meshbluConfig, restService}) ->
+    @meshbluAuth =  new MeshbluAuth {meshbluConfig}
+    @restController = new RestController {meshbluConfig, restService}
 
   route: (app) =>
-    restController = new RestController {@restService}
-    app.post '/flows/:flowId/triggers/:triggerId', meshbluAuth(@meshbluConfig), restController.triggerById
-    app.post '/flows/triggers/:triggerName', meshbluAuth(@meshbluConfig), restController.triggerByName
-    app.post '/respond/:responseId', restController.respond
+    app.use @meshbluAuth.retrieve
+    app.post '/flows/:flowId/triggers/:triggerId', @meshbluAuth.gateway, @restController.triggerById
+    app.post '/flows/triggers/:triggerName', @restController.triggerByName
+    app.post '/respond/:responseId', @restController.respond
 
     app.get '/flows/:flowId/triggers/:triggerId', (request, response) ->
       response.status(405).send('Method Not Allowed: POST required')
