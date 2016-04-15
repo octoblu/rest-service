@@ -76,7 +76,24 @@ describe 'Trigger By Id', ->
       @meshbluAuth.done()
 
     it 'should respond with 200', ->
-      expect(@response.statusCode).to.equal 200
+      expect(@response.statusCode).to.equal 200, @body
 
     it 'should have a body', ->
       expect(@body).to.deep.equal name: 'Freedom'
+
+    it 'should create a request', (done) ->
+      @jobManager.getRequest ['request'], (error, request) =>
+        return done error if error
+        expect(request).to.deep.equal {
+          metadata:
+            auth:
+              uuid: 'my-uuid'
+              token: 'my-token'
+            flowId: 'flow-id'
+            jobType: 'triggerById'
+            responseBaseUri: 'https://rest.octoblu.com'
+            responseId: 'response-id'
+            triggerId: 'trigger-id'
+          rawData: '{"name":"Freedom"}'
+        }
+        done()

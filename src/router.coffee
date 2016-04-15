@@ -3,13 +3,13 @@ MeshbluAuth    = require 'express-meshblu-auth'
 
 class Router
   constructor: ({meshbluConfig, restService}) ->
-    @meshbluAuth =  new MeshbluAuth {meshbluConfig}
+    @meshbluAuth =  new MeshbluAuth meshbluConfig
     @restController = new RestController {meshbluConfig, restService}
 
   route: (app) =>
     app.use @meshbluAuth.retrieve
-    app.post '/flows/:flowId/triggers/:triggerId', @meshbluAuth.gateway, @restController.triggerById
-    app.post '/flows/triggers/:triggerName', @restController.triggerByName
+    app.post '/flows/:flowId/triggers/:triggerId', @restController.triggerById
+    app.post '/flows/triggers/:triggerName', @meshbluAuth.gateway, @restController.triggerByName
     app.post '/respond/:responseId', @restController.respond
 
     app.get '/flows/:flowId/triggers/:triggerId', (request, response) ->

@@ -22,11 +22,11 @@ class RestService
       return callback @_createError 408, 'Request Timeout' unless result?
       callback null, code: result.metadata?.code, data: JSON.parse result.rawData
 
-  triggerById: ({meshbluAuth,flowId,triggerId,responseId,responseBaseUri}, data, callback) =>
+  triggerById: ({auth,flowId,triggerId,responseId,responseBaseUri}, data, callback) =>
     responseId ?= NodeUUID.v4()
     message =
       metadata:
-        auth: meshbluAuth
+        auth: auth
         jobType: 'triggerById'
         responseId: responseId
         triggerId: triggerId

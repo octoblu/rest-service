@@ -58,7 +58,7 @@ class Server
       jobLogger: jobLogger
 
     restService = new RestService {jobManager}
-    router = new Router {restService,@meshbluConfig}
+    router = new Router {@meshbluConfig, restService}
 
     router.route app
 

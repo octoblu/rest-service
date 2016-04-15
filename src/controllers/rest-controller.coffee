@@ -1,6 +1,7 @@
+_ = require 'lodash'
 
 class RestController
-  constructor: ({@restService}) ->
+  constructor: ({@meshbluConfig, @restService}) ->
 
   triggerByName: (request, response) =>
     {meshbluAuth, body} = request
@@ -13,11 +14,13 @@ class RestController
 
   triggerById: (request, response) =>
     {meshbluAuth, body} = request
-    # meshbluAuth(@meshbluConfig)
     {flowId, triggerId} = request.params
     {responseId} = request.query
+    meshbluAuth = request.meshbluAuth ? @meshbluConfig
+    auth = _.pick meshbluAuth, 'uuid', 'token'
+
     responseBaseUri = request.header('X-RESPONSE-BASE-URI') ? 'https://rest.octoblu.com'
-    @restService.triggerById {meshbluAuth,flowId,triggerId,responseId,responseBaseUri}, body, (error, result) =>
+    @restService.triggerById {auth,flowId,triggerId,responseId,responseBaseUri}, body, (error, result) =>
       return response.status(error.code || 500).send error: error.message if error?
       response.status(result.code).send result.data
 

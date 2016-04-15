@@ -7,7 +7,7 @@ RedisNS    = require '@octoblu/redis-ns'
 JobManager = require 'meshblu-core-job-manager'
 uuid       = require 'uuid'
 
-describe 'Trigger By Id', ->
+describe 'Unauthenticated', ->
   beforeEach (done) ->
     @meshblu = shmock 0xd00d
 
@@ -57,9 +57,6 @@ describe 'Trigger By Id', ->
       options =
         uri: '/flows/flow-id/triggers/trigger-id'
         baseUrl: "http://localhost:#{@serverPort}"
-        auth:
-          user: 'my-uuid'
-          pass: 'my-token'
         json:
           name: 'Freedom'
         qs:
@@ -74,4 +71,19 @@ describe 'Trigger By Id', ->
     it 'should have a body', ->
       expect(@body).to.deep.equal name: 'Freedom'
 
-    it 'should create a request', ->
+    it 'should create a request', (done) ->
+      @jobManager.getRequest ['request'], (error, request) =>
+        return done error if error
+        expect(request).to.deep.equal {
+          metadata:
+            auth:
+              uuid: 'you-you-eye-D'
+              token: 'talking'
+            flowId: 'flow-id'
+            jobType: 'triggerById'
+            responseBaseUri: 'https://rest.octoblu.com'
+            responseId: 'response-id'
+            triggerId: 'trigger-id'
+          rawData: '{"name":"Freedom"}'
+        }
+        done()
